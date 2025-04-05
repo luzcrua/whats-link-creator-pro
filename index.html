@@ -11,6 +11,8 @@
     <!-- Preconnect to critical domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:title" content="AriWhats - WhatsApp Link Generator" />
@@ -37,24 +39,16 @@
     <link rel="canonical" href="https://whatsgeneratorlink.netlify.app/" />
     
     <!-- Cache control -->
-    <meta http-equiv="Cache-Control" content="max-age=86400" />
+    <meta http-equiv="Cache-Control" content="max-age=31536000" />
   </head>
-
-  <!-- Google tag (gtag.js) deferred -->
-  <script async defer src="https://www.googletagmanager.com/gtag/js?id=G-SQNCHYLW1G"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-SQNCHYLW1G', { 'send_page_view': false });
-  </script>
-
-  <!-- AdSense script deferred -->
-  <script async defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8357117612559558"
-     crossorigin="anonymous"></script>
 
   <body>
     <div id="root"></div>
+    <!-- Google tag (gtag.js) deferred -->
+    <script async defer src="https://www.googletagmanager.com/gtag/js?id=G-SQNCHYLW1G"></script>
+    <!-- AdSense script deferred -->
+    <script async defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8357117612559558"
+      crossorigin="anonymous"></script>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>

@@ -1,47 +1,88 @@
 
-// Analytics and tracking utility functions
-// Optimized for better performance
+/**
+ * Performance-optimized analytics utility functions
+ */
+
+// Create a single analytics queue to batch operations
+const analyticsQueue: (() => void)[] = [];
+let isProcessingQueue = false;
+
+// Process the analytics queue during idle time
+const processAnalyticsQueue = () => {
+  if (isProcessingQueue || analyticsQueue.length === 0) return;
+  
+  isProcessingQueue = true;
+  
+  const processNextBatch = () => {
+    // Process up to 5 operations at once to avoid blocking main thread
+    const batch = analyticsQueue.splice(0, 5);
+    if (batch.length === 0) {
+      isProcessingQueue = false;
+      return;
+    }
+    
+    batch.forEach(operation => {
+      try {
+        operation();
+      } catch (error) {
+        console.error('Analytics operation failed:', error);
+      }
+    });
+    
+    if (analyticsQueue.length > 0) {
+      if (window.requestIdleCallback) {
+        window.requestIdleCallback(() => processNextBatch(), { timeout: 1000 });
+      } else {
+        setTimeout(processNextBatch, 50);
+      }
+    } else {
+      isProcessingQueue = false;
+    }
+  };
+  
+  processNextBatch();
+};
+
+// Add an operation to the queue
+const queueAnalyticsOperation = (operation: () => void) => {
+  analyticsQueue.push(operation);
+  
+  if (!isProcessingQueue) {
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(() => processAnalyticsQueue(), { timeout: 2000 });
+    } else {
+      setTimeout(processAnalyticsQueue, 100);
+    }
+  }
+};
 
 /**
  * Initialize Google Analytics with performance optimizations
- * @param measurementId - GA4 measurement ID
  */
 export const initializeGoogleAnalytics = (measurementId: string): void => {
   if (!measurementId) return;
   
-  // Add Google Analytics script with defer to prevent blocking
-  const script = document.createElement('script');
-  script.async = true;
-  script.defer = true; // Add defer attribute
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
-  document.head.appendChild(script);
-  
-  // Initialize gtag
+  // Define gtag function
   window.dataLayer = window.dataLayer || [];
-  function gtag(...args: any[]) {
-    window.dataLayer.push(args);
-  }
-  window.gtag = gtag;
-  gtag('js', new Date());
-  gtag('config', measurementId, {
-    'send_page_view': false, // Disable automatic page view to control timing
+  window.gtag = function() {
+    window.dataLayer.push(arguments);
+  };
+  window.gtag('js', new Date());
+  window.gtag('config', measurementId, {
+    'send_page_view': false,
+    'transport_type': 'beacon',
+    'anonymize_ip': true
   });
+  
+  // Script already added in index.html with defer
 };
 
 /**
  * Initialize Google AdSense with performance optimizations
- * @param adClientId - AdSense client ID
  */
 export const initializeGoogleAdSense = (adClientId: string): void => {
+  // Script already added in index.html with defer
   if (!adClientId) return;
-  
-  // Add script with defer to prevent render blocking
-  const script = document.createElement('script');
-  script.async = true;
-  script.defer = true; // Add defer attribute
-  script.crossOrigin = 'anonymous';
-  script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClientId}`;
-  document.head.appendChild(script);
   
   // Initialize adsbygoogle
   window.adsbygoogle = window.adsbygoogle || [];
@@ -49,13 +90,11 @@ export const initializeGoogleAdSense = (adClientId: string): void => {
 
 /**
  * Initialize Facebook Pixel with performance optimizations
- * @param pixelId - Facebook pixel ID
  */
 export const initializeFacebookPixel = (pixelId: string): void => {
   if (!pixelId) return;
   
-  // Defer Facebook Pixel initialization
-  setTimeout(() => {
+  queueAnalyticsOperation(() => {
     // Add Facebook Pixel base code
     window.fbq = window.fbq || function() {
       (window.fbq.q = window.fbq.q || []).push(arguments);
@@ -75,82 +114,43 @@ export const initializeFacebookPixel = (pixelId: string): void => {
     
     // Initialize the pixel
     window.fbq('init', pixelId);
-    window.fbq('track', 'PageView');
-  }, 2000); // Delay initialization to prioritize core content loading
+  });
 };
 
 /**
  * Track page view with optimized timing
- * @param path - URL path
- * @param title - Page title
  */
 export const trackPageView = (path: string, title: string): void => {
-  // Use requestIdleCallback to run tracking during browser idle time
-  if (window.requestIdleCallback) {
-    window.requestIdleCallback(() => {
-      // Track in Google Analytics
-      if (window.gtag) {
-        window.gtag('event', 'page_view', {
-          page_path: path,
-          page_title: title,
-        });
-      }
-      
-      // Track in Facebook Pixel
-      if (window.fbq) {
-        window.fbq('track', 'PageView');
-      }
-    });
-  } else {
-    // Fallback for browsers without requestIdleCallback
-    setTimeout(() => {
-      // Track in Google Analytics
-      if (window.gtag) {
-        window.gtag('event', 'page_view', {
-          page_path: path,
-          page_title: title,
-        });
-      }
-      
-      // Track in Facebook Pixel
-      if (window.fbq) {
-        window.fbq('track', 'PageView');
-      }
-    }, 0);
-  }
+  queueAnalyticsOperation(() => {
+    // Track in Google Analytics
+    if (window.gtag) {
+      window.gtag('event', 'page_view', {
+        page_path: path,
+        page_title: title,
+        send_to: window.gtag.length > 0 ? window.gtag[0] : undefined
+      });
+    }
+    
+    // Track in Facebook Pixel
+    if (window.fbq) {
+      window.fbq('track', 'PageView');
+    }
+  });
 };
 
 /**
  * Track custom event with performance optimization
- * @param eventName - Name of the event
- * @param eventParams - Event parameters
  */
 export const trackEvent = (eventName: string, eventParams?: Record<string, any>): void => {
-  // Use requestIdleCallback to run tracking during browser idle time
-  if (window.requestIdleCallback) {
-    window.requestIdleCallback(() => {
-      // Track in Google Analytics
-      if (window.gtag) {
-        window.gtag('event', eventName, eventParams);
-      }
-      
-      // Track in Facebook Pixel
-      if (window.fbq) {
-        window.fbq('track', eventName, eventParams);
-      }
-    });
-  } else {
-    // Fallback for browsers without requestIdleCallback
-    setTimeout(() => {
-      // Track in Google Analytics
-      if (window.gtag) {
-        window.gtag('event', eventName, eventParams);
-      }
-      
-      // Track in Facebook Pixel
-      if (window.fbq) {
-        window.fbq('track', eventName, eventParams);
-      }
-    }, 0);
-  }
+  queueAnalyticsOperation(() => {
+    // Track in Google Analytics
+    if (window.gtag) {
+      window.gtag('event', eventName, eventParams);
+    }
+    
+    // Track in Facebook Pixel
+    if (window.fbq) {
+      window.fbq('track', eventName, eventParams);
+    }
+  });
 };
