@@ -1,10 +1,11 @@
 
 import { ReactNode } from "react";
 import { ThemeToggle } from "./theme-toggle";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Share } from "lucide-react";
 import { LanguageSelector } from "./language-selector";
 import { useLanguage } from "@/contexts/language-context";
 import { SEOHead } from "./seo-head";
+import { Button } from "./ui/button";
 
 interface LayoutProps {
   children: ReactNode;
@@ -23,6 +24,12 @@ export function Layout({
 }: LayoutProps) {
   const { translations } = useLanguage();
   
+  const handleShareOnWhatsApp = () => {
+    const url = window.location.href;
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(url)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+  
   return (
     <div className="min-h-screen flex flex-col theme-transition">
       <SEOHead 
@@ -39,6 +46,15 @@ export function Layout({
             <span className="font-bold text-xl md:text-2xl">{translations.headerTitle}</span>
           </div>
           <div className="flex items-center gap-2">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={handleShareOnWhatsApp} 
+              className="text-whatsapp hover:text-whatsapp-dark"
+              aria-label="Share on WhatsApp"
+            >
+              <Share className="h-5 w-5 animate-pulse-green" />
+            </Button>
             <LanguageSelector />
             <ThemeToggle />
           </div>
@@ -52,6 +68,25 @@ export function Layout({
       <footer className="border-t py-6 mt-auto">
         <div className="container max-w-screen-lg mx-auto px-4 text-center text-sm text-muted-foreground">
           <p>{translations.footerText}</p>
+          <div className="flex items-center justify-center mt-4 gap-2">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={handleShareOnWhatsApp} 
+              className="text-whatsapp hover:text-whatsapp-dark"
+              aria-label="Share on WhatsApp"
+            >
+              <Share className="h-5 w-5 animate-pulse-green" />
+            </Button>
+          </div>
+          <p className="mt-4 text-xs">
+            iDealizado por <a 
+              href="https://instagram.com/arinelson.me" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-whatsapp hover:text-whatsapp-dark transition-colors"
+            >ARINELSON SANTOS</a>
+          </p>
         </div>
       </footer>
     </div>
