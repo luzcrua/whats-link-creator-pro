@@ -2,12 +2,10 @@
 import { Share } from "lucide-react";
 import { Button } from "./ui/button";
 import { memo } from "react";
+import { Translations } from "@/contexts/language-context";
 
 interface FooterProps {
-  translations: {
-    footerText: string;
-    [key: string]: string;
-  };
+  translations: Translations;
   handleShareOnWhatsApp: () => void;
 }
 
