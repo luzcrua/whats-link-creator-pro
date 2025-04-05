@@ -19,6 +19,7 @@ export const initializeGoogleAnalytics = (measurementId: string): void => {
   function gtag(...args: any[]) {
     window.dataLayer.push(args);
   }
+  window.gtag = gtag;
   gtag('js', new Date());
   gtag('config', measurementId);
 };
@@ -35,6 +36,9 @@ export const initializeGoogleAdSense = (adClientId: string): void => {
   script.crossOrigin = 'anonymous';
   script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClientId}`;
   document.head.appendChild(script);
+  
+  // Initialize adsbygoogle
+  window.adsbygoogle = window.adsbygoogle || [];
 };
 
 /**
