@@ -41,7 +41,7 @@ export function WhatsappLinkGenerator() {
     const encodedMessage = encodeURIComponent(message);
     
     // Create the WhatsApp API URL
-    const link = `https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${encodedMessage}`;
+    const link = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
     
     setGeneratedLink(link);
 
