@@ -2,45 +2,9 @@
 import { Layout } from "@/components/layout";
 import { WhatsappLinkGenerator } from "@/components/whatsapp-link-generator";
 import { useLanguage } from "@/contexts/language-context";
-import { memo, lazy, Suspense, useEffect, useState } from "react";
 
-// Create a separate HowItWorks component to enable code splitting
-const HowItWorks = lazy(() => import("@/components/how-it-works"));
-
-// Small inline loading component to avoid additional imports
-const LoadingSkeleton = () => (
-  <div className="h-64 mt-16 space-y-4">
-    <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded-md w-3/4 mx-auto animate-pulse"></div>
-    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded-md w-1/2 mx-auto animate-pulse"></div>
-    <div className="h-24 bg-gray-200 dark:bg-gray-700 rounded-md w-5/6 mx-auto mt-8 animate-pulse"></div>
-  </div>
-);
-
-const Index = memo(() => {
+const Index = () => {
   const { translations } = useLanguage();
-  const [isHowItWorksVisible, setIsHowItWorksVisible] = useState(false);
-  
-  // Only load HowItWorks component when user has scrolled down
-  useEffect(() => {
-    const handleScroll = () => {
-      // Start loading when user scrolls down 200px
-      if (window.scrollY > 200 && !isHowItWorksVisible) {
-        setIsHowItWorksVisible(true);
-      }
-    };
-    
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    // Set a timeout to load it anyway after 5 seconds
-    const timer = setTimeout(() => {
-      setIsHowItWorksVisible(true);
-    }, 5000);
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      clearTimeout(timer);
-    };
-  }, [isHowItWorksVisible]);
   
   return (
     <Layout>
@@ -59,17 +23,31 @@ const Index = memo(() => {
         <WhatsappLinkGenerator />
       </section>
       
-      {isHowItWorksVisible ? (
-        <Suspense fallback={<LoadingSkeleton />}>
-          <HowItWorks />
-        </Suspense>
-      ) : (
-        <LoadingSkeleton />
-      )}
+      <section className="mx-auto max-w-3xl mt-16">
+        <h2 className="text-2xl font-bold mb-6 text-center">{translations.howItWorksTitle}</h2>
+        <div className="grid gap-6 md:grid-cols-3">
+          <div className="rounded-lg border bg-card p-4 text-card-foreground shadow-sm transition-all hover:shadow-md">
+            <div className="mb-2 font-semibold">{translations.step1Title}</div>
+            <p className="text-sm text-muted-foreground">
+              {translations.step1Description}
+            </p>
+          </div>
+          <div className="rounded-lg border bg-card p-4 text-card-foreground shadow-sm transition-all hover:shadow-md">
+            <div className="mb-2 font-semibold">{translations.step2Title}</div>
+            <p className="text-sm text-muted-foreground">
+              {translations.step2Description}
+            </p>
+          </div>
+          <div className="rounded-lg border bg-card p-4 text-card-foreground shadow-sm transition-all hover:shadow-md">
+            <div className="mb-2 font-semibold">{translations.step3Title}</div>
+            <p className="text-sm text-muted-foreground">
+              {translations.step3Description}
+            </p>
+          </div>
+        </div>
+      </section>
     </Layout>
   );
-});
-
-Index.displayName = "Index";
+};
 
 export default Index;
