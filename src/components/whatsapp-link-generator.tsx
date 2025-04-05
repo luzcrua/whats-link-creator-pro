@@ -7,6 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Copy, Check, MessageSquare, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/language-context";
+import { PhoneFormatInfo } from "./phone-format-info";
 
 export function WhatsappLinkGenerator() {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -15,6 +17,7 @@ export function WhatsappLinkGenerator() {
   const [copied, setCopied] = useState(false);
   const linkRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  const { translations } = useLanguage();
 
   // Handle phone number input validation
   const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,8 +30,8 @@ export function WhatsappLinkGenerator() {
   const generateLink = () => {
     if (!phoneNumber || !message) {
       toast({
-        title: "Campos obrigatórios",
-        description: "Por favor, preencha o número de telefone e a mensagem.",
+        title: translations.requiredFieldsTitle,
+        description: translations.requiredFieldsDescription,
         variant: "destructive",
       });
       return;
@@ -43,8 +46,8 @@ export function WhatsappLinkGenerator() {
     setGeneratedLink(link);
 
     toast({
-      title: "Link gerado com sucesso!",
-      description: "Agora você pode copiar e compartilhar o link.",
+      title: translations.linkGeneratedTitle,
+      description: translations.linkGeneratedDescription,
     });
   };
 
@@ -56,8 +59,8 @@ export function WhatsappLinkGenerator() {
       setCopied(true);
       
       toast({
-        title: "Link copiado!",
-        description: "O link foi copiado para a área de transferência.",
+        title: translations.linkCopiedTitle,
+        description: translations.linkCopiedDescription,
       });
       
       // Reset copy status after 2 seconds
@@ -76,34 +79,34 @@ export function WhatsappLinkGenerator() {
     <div className="w-full animate-fade-in">
       <Card className="border-2 shadow-lg">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl md:text-3xl font-bold">Gerador de Links para WhatsApp</CardTitle>
+          <CardTitle className="text-2xl md:text-3xl font-bold">{translations.mainTitle}</CardTitle>
           <CardDescription>
-            Crie links personalizados para enviar mensagens automáticas no WhatsApp
+            {translations.mainSubtitle}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Form */}
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="phone">Digite o número de telefone (com DDI e DDD):</Label>
+              <Label htmlFor="phone">{translations.phoneNumberLabel}</Label>
               <Input
                 id="phone"
-                placeholder="Ex.: 5582987654321"
+                placeholder={translations.phoneNumberPlaceholder}
                 value={phoneNumber}
                 onChange={handlePhoneInput}
                 maxLength={15}
                 className="transition-all focus-visible:ring-whatsapp"
               />
               <p className="text-xs text-muted-foreground">
-                Formato internacional (ex.: 5582987654321 para números brasileiros)
+                {translations.phoneNumberHelp}
               </p>
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="message">Digite a mensagem personalizada:</Label>
+              <Label htmlFor="message">{translations.messageLabel}</Label>
               <Textarea
                 id="message"
-                placeholder="Ex.: Olá, gostaria de agendar um horário..."
+                placeholder={translations.messagePlaceholder}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 rows={6}
@@ -116,14 +119,14 @@ export function WhatsappLinkGenerator() {
               className="w-full bg-whatsapp hover:bg-whatsapp-dark text-white"
               size="lg"
             >
-              <MessageSquare className="mr-2 h-5 w-5" /> Gerar Link
+              <MessageSquare className="mr-2 h-5 w-5" /> {translations.generateButton}
             </Button>
           </div>
           
           {/* Generated Link */}
           {generatedLink && (
             <div className="space-y-3 animate-scale-in pt-2">
-              <Label htmlFor="result">Link gerado:</Label>
+              <Label htmlFor="result">{translations.generatedLinkLabel}</Label>
               <div className="flex">
                 <Input
                   ref={linkRef}
@@ -147,10 +150,12 @@ export function WhatsappLinkGenerator() {
                 variant="outline" 
                 className="w-full border-whatsapp hover:border-whatsapp-dark text-whatsapp hover:text-whatsapp-dark"
               >
-                <ExternalLink className="mr-2 h-5 w-5" /> Abrir no WhatsApp
+                <ExternalLink className="mr-2 h-5 w-5" /> {translations.openWhatsappButton}
               </Button>
             </div>
           )}
+
+          <PhoneFormatInfo />
         </CardContent>
       </Card>
     </div>
