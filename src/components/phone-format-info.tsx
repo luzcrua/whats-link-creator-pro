@@ -10,6 +10,11 @@ import {
 export function PhoneFormatInfo() {
   const { translations } = useLanguage();
 
+  // Add a safeguard for early rendering when translations might not be fully loaded
+  if (!translations || !translations.countryExamples) {
+    return null; // Don't render anything if translations aren't ready
+  }
+
   return (
     <div className="mt-6 animate-fade-in">
       <Accordion type="single" collapsible className="w-full">
