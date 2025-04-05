@@ -8,6 +8,10 @@
     <meta name="description" content="Create WhatsApp links easily with AriWhats" />
     <meta name="author" content="AriWhats" />
     
+    <!-- Preconnect to critical domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
     <!-- Open Graph / Facebook -->
     <meta property="og:title" content="AriWhats - WhatsApp Link Generator" />
     <meta property="og:description" content="Create custom links in seconds to send automatic messages on WhatsApp." />
@@ -31,20 +35,22 @@
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://whatsgeneratorlink.netlify.app/" />
+    
+    <!-- Cache control -->
+    <meta http-equiv="Cache-Control" content="max-age=86400" />
   </head>
 
+  <!-- Google tag (gtag.js) deferred -->
+  <script async defer src="https://www.googletagmanager.com/gtag/js?id=G-SQNCHYLW1G"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-SQNCHYLW1G', { 'send_page_view': false });
+  </script>
 
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-SQNCHYLW1G"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-SQNCHYLW1G');
-</script>
-
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8357117612559558"
+  <!-- AdSense script deferred -->
+  <script async defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8357117612559558"
      crossorigin="anonymous"></script>
 
   <body>

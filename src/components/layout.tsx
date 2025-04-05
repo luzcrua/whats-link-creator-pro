@@ -6,6 +6,10 @@ import { LanguageSelector } from "./language-selector";
 import { useLanguage } from "@/contexts/language-context";
 import { SEOHead } from "./seo-head";
 import { Button } from "./ui/button";
+import { memo, lazy, Suspense } from "react";
+
+// Lazy-loaded footer component to reduce initial bundle size
+const Footer = lazy(() => import("./footer"));
 
 interface LayoutProps {
   children: ReactNode;
@@ -15,13 +19,14 @@ interface LayoutProps {
   imageUrl?: string;
 }
 
-export function Layout({ 
+// Use memo to prevent unnecessary re-renders
+const Layout = memo(({ 
   children, 
   title, 
   description, 
   canonicalUrl, 
   imageUrl 
-}: LayoutProps) {
+}: LayoutProps) => {
   const { translations } = useLanguage();
   
   const handleShareOnWhatsApp = () => {
@@ -65,30 +70,13 @@ export function Layout({
         {children}
       </main>
       
-      <footer className="border-t py-6 mt-auto">
-        <div className="container max-w-screen-lg mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>{translations.footerText}</p>
-          <div className="flex items-center justify-center mt-4 gap-2">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={handleShareOnWhatsApp} 
-              className="text-whatsapp hover:text-whatsapp-dark"
-              aria-label="Share on WhatsApp"
-            >
-              <Share className="h-5 w-5 animate-pulse-green" />
-            </Button>
-          </div>
-          <p className="mt-4 text-xs">
-            iDealizado por <a 
-              href="https://instagram.com/arinelson.me" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-whatsapp hover:text-whatsapp-dark transition-colors"
-            >ARINELSON SANTOS</a>
-          </p>
-        </div>
-      </footer>
+      <Suspense fallback={<div className="h-24 border-t"></div>}>
+        <Footer translations={translations} handleShareOnWhatsApp={handleShareOnWhatsApp} />
+      </Suspense>
     </div>
   );
-}
+});
+
+Layout.displayName = "Layout";
+
+export { Layout };
