@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Copy, Check, WhatsappIcon, ExternalLink } from "lucide-react";
+import { Copy, Check, MessageSquare, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export function WhatsappLinkGenerator() {
@@ -116,7 +116,7 @@ export function WhatsappLinkGenerator() {
               className="w-full bg-whatsapp hover:bg-whatsapp-dark text-white"
               size="lg"
             >
-              <WhatsappIcon className="mr-2 h-5 w-5" /> Gerar Link
+              <MessageSquare className="mr-2 h-5 w-5" /> Gerar Link
             </Button>
           </div>
           

@@ -1,7 +1,7 @@
 
 import { ReactNode } from "react";
 import { ThemeToggle } from "./theme-toggle";
-import { WhatsappIcon } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 
 interface LayoutProps {
   children: ReactNode;
@@ -13,7 +13,7 @@ export function Layout({ children }: LayoutProps) {
       <header className="border-b py-3 px-4 bg-background/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="container max-w-screen-lg mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <WhatsappIcon className="h-6 w-6 text-whatsapp animate-pulse-green" />
+            <MessageSquare className="h-6 w-6 text-whatsapp animate-pulse-green" />
             <span className="font-bold text-xl md:text-2xl">AriWhats</span>
           </div>
           <ThemeToggle />
