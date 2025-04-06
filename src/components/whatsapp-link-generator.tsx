@@ -1,4 +1,3 @@
-
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +8,7 @@ import { Copy, Check, MessageSquare, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/language-context";
 import { PhoneFormatInfo } from "./phone-format-info";
+import { encodeMessageForWhatsApp } from "@/lib/utils";
 
 export function WhatsappLinkGenerator() {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -37,12 +37,8 @@ export function WhatsappLinkGenerator() {
       return;
     }
 
-    // Enhanced emoji handling - double encode to ensure proper handling
-    // First, normalize the string to ensure consistent emoji representation
-    const normalizedMessage = message.normalize('NFC');
-    
-    // Then encode the normalized message for the URL
-    const encodedMessage = encodeURIComponent(normalizedMessage);
+    // Use our enhanced emoji encoding function
+    const encodedMessage = encodeMessageForWhatsApp(message);
     
     // Create the WhatsApp API URL
     const link = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
