@@ -37,7 +37,8 @@ export function WhatsappLinkGenerator() {
       return;
     }
 
-    // Encode the message for URL
+    // Properly encode the message for URL including emoji support
+    // This ensures emojis are properly converted to their UTF-8 representation
     const encodedMessage = encodeURIComponent(message);
     
     // Create the WhatsApp API URL
@@ -55,16 +56,34 @@ export function WhatsappLinkGenerator() {
   const copyToClipboard = () => {
     if (linkRef.current) {
       linkRef.current.select();
-      document.execCommand("copy");
-      setCopied(true);
       
-      toast({
-        title: translations.linkCopiedTitle,
-        description: translations.linkCopiedDescription,
-      });
-      
-      // Reset copy status after 2 seconds
-      setTimeout(() => setCopied(false), 2000);
+      // Use the modern clipboard API for better compatibility
+      try {
+        navigator.clipboard.writeText(linkRef.current.value)
+          .then(() => {
+            setCopied(true);
+            
+            toast({
+              title: translations.linkCopiedTitle,
+              description: translations.linkCopiedDescription,
+            });
+            
+            // Reset copy status after 2 seconds
+            setTimeout(() => setCopied(false), 2000);
+          });
+      } catch (err) {
+        // Fallback for older browsers
+        document.execCommand("copy");
+        setCopied(true);
+        
+        toast({
+          title: translations.linkCopiedTitle,
+          description: translations.linkCopiedDescription,
+        });
+        
+        // Reset copy status after 2 seconds
+        setTimeout(() => setCopied(false), 2000);
+      }
     }
   };
 
