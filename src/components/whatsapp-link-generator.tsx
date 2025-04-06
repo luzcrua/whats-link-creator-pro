@@ -37,9 +37,12 @@ export function WhatsappLinkGenerator() {
       return;
     }
 
-    // Properly encode the message for URL including emoji support
-    // This ensures emojis are properly converted to their UTF-8 representation
-    const encodedMessage = encodeURIComponent(message);
+    // Enhanced emoji handling - double encode to ensure proper handling
+    // First, normalize the string to ensure consistent emoji representation
+    const normalizedMessage = message.normalize('NFC');
+    
+    // Then encode the normalized message for the URL
+    const encodedMessage = encodeURIComponent(normalizedMessage);
     
     // Create the WhatsApp API URL
     const link = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
