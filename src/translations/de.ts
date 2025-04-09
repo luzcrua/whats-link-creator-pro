@@ -19,6 +19,9 @@ const translations: Translations = {
   messageLabel: "Geben Sie Ihre benutzerdefinierte Nachricht ein:",
   messagePlaceholder: "Bsp.: Hallo, ich möchte einen Termin vereinbaren...",
   generateButton: "Link generieren",
+  includeMessageLabel: "Benutzerdefinierte Nachricht einschließen",
+  phoneRequiredDescription: "Bitte geben Sie eine gültige Telefonnummer ein.",
+  messageRequiredDescription: "Bitte geben Sie eine Nachricht ein, die in Ihrem WhatsApp-Link enthalten sein soll.",
   
   // Results
   generatedLinkLabel: "Generierter Link:",

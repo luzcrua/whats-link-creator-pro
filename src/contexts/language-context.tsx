@@ -24,6 +24,11 @@ export interface Translations {
   messagePlaceholder: string;
   generateButton: string;
   
+  // New switch for including message
+  includeMessageLabel: string;
+  phoneRequiredDescription: string;
+  messageRequiredDescription: string;
+  
   // Results
   generatedLinkLabel: string;
   copyButton: string;

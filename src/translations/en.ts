@@ -19,6 +19,9 @@ const translations: Translations = {
   messageLabel: "Enter your custom message:",
   messagePlaceholder: "Ex.: Hello, I would like to schedule an appointment...",
   generateButton: "Generate Link",
+  includeMessageLabel: "Include personalized message",
+  phoneRequiredDescription: "Please enter a valid phone number.",
+  messageRequiredDescription: "Please enter a message to include in your WhatsApp link.",
   
   // Results
   generatedLinkLabel: "Generated link:",

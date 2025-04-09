@@ -1,4 +1,3 @@
-
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,7 +33,7 @@ export function WhatsappLinkGenerator() {
     if (!phoneNumber) {
       toast({
         title: translations.requiredFieldsTitle,
-        description: translations.phoneRequiredDescription || translations.requiredFieldsDescription,
+        description: translations.phoneRequiredDescription,
         variant: "destructive",
       });
       return;
@@ -43,7 +42,7 @@ export function WhatsappLinkGenerator() {
     if (includeMessage && !message) {
       toast({
         title: translations.requiredFieldsTitle,
-        description: translations.messageRequiredDescription || translations.requiredFieldsDescription,
+        description: translations.messageRequiredDescription,
         variant: "destructive",
       });
       return;
@@ -141,7 +140,7 @@ export function WhatsappLinkGenerator() {
                 checked={includeMessage}
                 onCheckedChange={setIncludeMessage}
               />
-              <Label htmlFor="include-message">{translations.includeMessageLabel || "Include personalized message"}</Label>
+              <Label htmlFor="include-message">{translations.includeMessageLabel}</Label>
             </div>
             
             {includeMessage && (
