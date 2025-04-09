@@ -1,3 +1,4 @@
+
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,10 +10,12 @@ import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/language-context";
 import { PhoneFormatInfo } from "./phone-format-info";
 import { encodeMessageForWhatsApp } from "@/lib/utils";
+import { Switch } from "@/components/ui/switch";
 
 export function WhatsappLinkGenerator() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [message, setMessage] = useState("");
+  const [includeMessage, setIncludeMessage] = useState(true);
   const [generatedLink, setGeneratedLink] = useState("");
   const [copied, setCopied] = useState(false);
   const linkRef = useRef<HTMLInputElement>(null);
@@ -28,20 +31,32 @@ export function WhatsappLinkGenerator() {
 
   // Generate WhatsApp link
   const generateLink = () => {
-    if (!phoneNumber || !message) {
+    if (!phoneNumber) {
       toast({
         title: translations.requiredFieldsTitle,
-        description: translations.requiredFieldsDescription,
+        description: translations.phoneRequiredDescription || translations.requiredFieldsDescription,
         variant: "destructive",
       });
       return;
     }
 
-    // Use our enhanced emoji encoding function
-    const encodedMessage = encodeMessageForWhatsApp(message);
+    if (includeMessage && !message) {
+      toast({
+        title: translations.requiredFieldsTitle,
+        description: translations.messageRequiredDescription || translations.requiredFieldsDescription,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    let link = `https://wa.me/${phoneNumber}`;
     
-    // Create the WhatsApp API URL
-    const link = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    // Only add message parameter if includeMessage is true and message exists
+    if (includeMessage && message) {
+      // Use our enhanced emoji encoding function
+      const encodedMessage = encodeMessageForWhatsApp(message);
+      link = `${link}?text=${encodedMessage}`;
+    }
     
     setGeneratedLink(link);
 
@@ -120,17 +135,28 @@ export function WhatsappLinkGenerator() {
               </p>
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="message">{translations.messageLabel}</Label>
-              <Textarea
-                id="message"
-                placeholder={translations.messagePlaceholder}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                rows={6}
-                className="resize-y min-h-[100px] transition-all focus-visible:ring-whatsapp"
+            <div className="flex items-center space-x-2 py-2">
+              <Switch
+                id="include-message"
+                checked={includeMessage}
+                onCheckedChange={setIncludeMessage}
               />
+              <Label htmlFor="include-message">{translations.includeMessageLabel || "Include personalized message"}</Label>
             </div>
+            
+            {includeMessage && (
+              <div className="space-y-2 animate-fade-in">
+                <Label htmlFor="message">{translations.messageLabel}</Label>
+                <Textarea
+                  id="message"
+                  placeholder={translations.messagePlaceholder}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  rows={6}
+                  className="resize-y min-h-[100px] transition-all focus-visible:ring-whatsapp"
+                />
+              </div>
+            )}
             
             <Button 
               onClick={generateLink} 
